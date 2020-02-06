@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/todos/add" method="post">
+        <input type="text" name="description" id="">
+        <input type="date" name="dueDate" id="">
+        <input type="submit" value="Add">
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th> Todo </th>
+                <th> Due Date </th>
+                <th> Actions </th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${todos.empty}">
+                <td colspan="2"> No Todos Available </td>
+            </tr>
+            <tr th:each="todo : ${todos}">
+                <td><span th:text="${todo.description}"> . </span></td>
+                <td><span th:text="${todo.dueDate}"> , </span></td>
+                <td>
+                    <input class="del" th:data-id="${todo.id}" type="button" value="X">
+                    <input class="edit" th:data-id="${todo.id}" type="button" value="E">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script>
+        $(".del").click( function(){
+            var id = $(this).data().id
+            $.post(`/todos/${id}/delete`);
+        })
+        $(".edit").click( function(){
+            var id = $(this).data().id
+            $.post({ 
+                url:`/todos/${id}/update`,
+                data:{
+                    description:"edited "+id,
+                    dueDate:"2020-1-30"
+                }
+            });
+        })
+    </script>
+</body>
+</html>
